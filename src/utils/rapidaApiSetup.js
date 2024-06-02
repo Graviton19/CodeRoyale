@@ -1,4 +1,4 @@
-const https = require('https');
+import https from 'https'
 
 // Define API request options
 const options = {
@@ -49,4 +49,4 @@ function compileCode(req, res) {
     apiRequest.end();
 }
 
-module.exports = { compileCode };
+export default compileCode;

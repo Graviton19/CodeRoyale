@@ -1,5 +1,5 @@
-const express = require('express');
-const { compileCode } = require('./src/utils/rapidaApiSetup');
+import express from 'express'
+import  compileCode  from './src/utils/rapidaApiSetup.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

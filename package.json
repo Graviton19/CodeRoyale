@@ -18,10 +18,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-<<<<<<< HEAD
-=======
     "mongoose": "^8.4.1",
->>>>>>> 487763171cf2d2106ab79d939d7d44022bf77859
     "prettier": "^3.3.0"
   },
   "devDependencies": {
