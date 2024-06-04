@@ -38,7 +38,8 @@ const userSchema = new Schema(
             type: Boolean,
             default: false
         },
-        otp: String
+        otp: String,
+        refreshToken: String
     },
     { timestamps: true }
 );
@@ -63,6 +64,6 @@ userSchema.methods.isPasswordCorrect = async function(password) {
     }
 };
 
-const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
 
-export default User;
+
