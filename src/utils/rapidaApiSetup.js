@@ -6,7 +6,7 @@ const options = {
     hostname: 'online-code-compiler.p.rapidapi.com',
     path: '/v1/',
     headers: {
-        'x-rapidapi-key': 'b281972eacmshaaa2e1b0ca39eddp194aa7jsndf1f297fa265',
+        'x-rapidapi-key': (`${process.env.RAPID_API_KEY}`),
         'x-rapidapi-host': 'online-code-compiler.p.rapidapi.com',
         'Content-Type': 'application/json'
     }
