@@ -1,9 +1,22 @@
 import axios from 'axios';
 import qs from 'qs';
-import { requestData } from '../constants.js';
-import { config } from "../constants.js";
 
 async function compileCode(req, res) {
+    const requestData = qs.stringify({
+        code: code,
+        language: language,
+        input: input || ''
+    });
+    
+    const config = {
+        method: 'post',
+        url: 'https://api.codex.jaagrav.in',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: requestData
+    };
+
     try {
         const { code, language, input } = req.body;
         const response = await axios(config);

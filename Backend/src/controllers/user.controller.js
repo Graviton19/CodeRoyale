@@ -3,6 +3,9 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Otp } from "../models/otp.models.js"
+import passport from "passport" 
+import { configurePassport } from "../utils/googleLogin.js" 
+import { Strategy as GoogleStrategy } from "passport-google-oauth2"
 
 const RegisterUser = asyncHandler(async(req,res)=>{
     const {email , username, password , otp} = req.body
@@ -57,4 +60,18 @@ const RegisterUser = asyncHandler(async(req,res)=>{
     )
 })
 
-export {RegisterUser}
+const googleget = (req, res) => { 
+    res.send("<button><a href='/auth'>Login With Google</a></button>") 
+}; 
+
+const googleLoginPage = passport.authenticate('google', { scope: [ 'email', 'profile' ] })
+
+
+
+
+
+export {
+        RegisterUser,
+        googleget,
+        googleLoginPage
+       }

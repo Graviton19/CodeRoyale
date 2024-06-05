@@ -1,6 +1,9 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import cookieSession from "cookie-session"
+import passport from "passport"
+import { configurePassport } from "./utils/googleLogin.js"
 const app = express()
 
 app.use(cors({
@@ -21,6 +24,14 @@ app.use(express.urlencoded({
 app.use(express.static("public"))
 
 app.use(cookieParser())
+
+
+app.use(cookieSession({ 
+    name: 'google-auth-session', 
+    keys: ['key1', 'key2'] 
+})); 
+app.use(passport.initialize()); 
+app.use(passport.session()); 
 
 import userRouter from "./routes/user.Routes.js"
 

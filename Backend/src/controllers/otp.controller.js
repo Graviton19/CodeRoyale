@@ -6,23 +6,19 @@ import { ApiError } from "../utils/ApiError.js";
 const sendOTP = async (req, res) => {
     try {
       const { email } = req.body;
-  
-      // Check if user is already present
+
       const checkUserPresent = await User.findOne({ email });
   
-      // If user found with provided email
       if (checkUserPresent) {
         throw new ApiError(400, "User already exists");
       }
   
-      // Generate a new OTP
       let otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false,
       });
-  
-      // Ensure the OTP is unique
+
       let result = await Otp.findOne({ otp: otp });
   
       while (result) {
@@ -31,16 +27,13 @@ const sendOTP = async (req, res) => {
         });
         result = await Otp.findOne({ otp: otp });
       }
-  
-      // Check if OTP already exists for the email
+
       const checkInOtpDb = await Otp.findOne({ email });
   
       if (!checkInOtpDb) {
-        // Create a new OTP entry
         const otpPayload = { email, otp };
         await Otp.create(otpPayload);
       } else {
-        // Update the existing OTP
         await Otp.findOneAndUpdate(
           { email: email },
           { $set: { otp: otp } },
@@ -55,7 +48,6 @@ const sendOTP = async (req, res) => {
       });
   
     } catch (error) {
-      // Handle errors
       if (error instanceof ApiError) {
         res.status(error.statusCode).json({
           success: false,
@@ -70,4 +62,4 @@ const sendOTP = async (req, res) => {
     }
 };
   
-export {sendOTP}
+export {sendOTP}    
