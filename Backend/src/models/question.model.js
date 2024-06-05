@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
 const testCaseSchema = new mongoose.Schema({
-    input: { type: mongoose.Schema.Types.Mixed, required: true },
+    input: { type: String, required: true },
     output: { type: String, required: true }
 });
+
 
 const questionSchema = new mongoose.Schema({
     questionId: { type: Number, required: true },

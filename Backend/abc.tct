@@ -1,0 +1,15 @@
+{
+  "questionId": 1,
+  "questionText": "Sample question",
+  "examples": [
+    { "input": "1\n2 3\n", "output": "5\n" }
+  ],
+  "testCases": [
+    { "input": "3\n1 2\n3 4\n5 6\n", "output": "3\n7\n11\n" },
+    { "input": "2\n4 5\n6 7\n", "output": "9\n13\n" }
+  ],
+  "numberOfTestCases": 2
+}
+PORT = 8000 
+MONGODB_URI = mongodb+srv://CodeRoyale:CodeRoyale@development.6wr5ebi.mongodb.net
+RAPID_API_KEY = b281972eacmshaaa2e1b0ca39eddp194aa7jsndf1f297fa265
