@@ -2,7 +2,7 @@ import express from 'express';
 import { RegisterUser } from '../controllers/user.controller.js';
 import { sendOTP } from '../controllers/otp.controller.js';
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
-
+import { addQuestion } from '../controllers/question.controller.js';
 
 const router = express.Router();
 
@@ -13,20 +13,9 @@ router.use(express.json());
 router.post('/sendOTP', sendOTP);
 router.post('/register', RegisterUser);
 
-
 router.post('/compile', compileCode);
 router.post('/submit', submitCode);
 
-// Debugging logs for route configuration
-// console.log('Routes configured:');
-// router.stack.forEach((r) => {
-//     if (r.route && r.route.path && r.route.methods) {
-//         console.log(`${r.route.path} - ${r.route.methods}`);
-//     } else {
-//         console.log('Unknown route:', r);
-//     }
-// });
-
-
+router.post('/addquestion', addQuestion); // New route for adding questions
 
 export default router;

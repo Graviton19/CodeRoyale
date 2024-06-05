@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 
 // Hardcoded predefined input string
-const predefinedInput = "3\n1 2\n3 4\n5 6";
+const predefinedInput = "6\n1 2\n3 4\n5 6\n1 2\n3 4\n5 6";
 
 async function makeCodexRequest(code, language) {
     const requestData = qs.stringify({
