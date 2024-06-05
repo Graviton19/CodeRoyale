@@ -1,35 +1,38 @@
-import axios from 'axios';
-import qs from 'qs';
+// import axios from 'axios';
+// import qs from 'qs';
 
-async function compileCode(req, res) {
-    const requestData = qs.stringify({
-        code: code,
-        language: language,
-        input: input || ''
-    });
+// async function compileCode(req, res) {
+//     try {
+//         const { code, language, input } = req.body;
+//         const requestData = qs.stringify({
     
-    const config = {
-        method: 'post',
-        url: 'https://api.codex.jaagrav.in',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: requestData
-    };
+//             code: code,
+//             language: language,
+//             input: input || ''
+//         });
+//         const config = {
+//             method: 'post',
+//             url: 'https://api.codex.jaagrav.in',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded'
+//             },
+//             data: requestData
+//         };
+//         const response = await axios(config);
+//         res.json(response.data);
+//     } catch (error) {
+//         console.error('Request error:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// }
 
-    try {
-        const { code, language, input } = req.body;
-        const response = await axios(config);
-        res.json(response.data);
-    } catch (error) {
-        console.error('Request error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
+// export default compileCode;
 
-export default compileCode;
-
-
+// ----------------------------------------------------
+// ----------------------------------------------------
+// ----------------------------------------------------
+// ----------------------------------------------------
+// ----------------------------------------------------
 
 // import https from 'https'
 

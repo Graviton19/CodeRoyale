@@ -13,6 +13,9 @@ const sendOTP = async (req, res) => {
         throw new ApiError(400, "User already exists");
       }
   
+      
+
+      // Generate a new OTP
       let otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
