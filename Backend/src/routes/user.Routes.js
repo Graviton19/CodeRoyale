@@ -1,16 +1,30 @@
-import { Router } from "express"
-import { RegisterUser } from "../controllers/user.controller.js"
-import { sendOTP } from "../controllers/otp.controller.js"
-import { CompileCode } from "../controllers/compile.controller.js"
-const router = Router()
+import express from 'express';
+import { RegisterUser } from '../controllers/user.controller.js';
+import { sendOTP } from '../controllers/otp.controller.js';
+import compileCode from '../controllers/compile.controller.js';
 
-router.route("/sendOTP").post(sendOTP)
+const router = express.Router();
 
-router.route("/register").post(RegisterUser)
+// Middleware to parse JSON bodies
+router.use(express.json());
 
-router.route("/compile").post(CompileCode)
+// Define routes
+router.post('/sendOTP', sendOTP);
+router.post('/register', RegisterUser);
 
-export default router
+
+router.post('/compile', compileCode);
+
+// Debugging logs for route configuration
+// console.log('Routes configured:');
+// router.stack.forEach((r) => {
+//     if (r.route && r.route.path && r.route.methods) {
+//         console.log(`${r.route.path} - ${r.route.methods}`);
+//     } else {
+//         console.log('Unknown route:', r);
+//     }
+// });
 
 
 
+export default router;
