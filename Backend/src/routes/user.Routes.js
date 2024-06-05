@@ -1,7 +1,8 @@
 import express from 'express';
 import { RegisterUser } from '../controllers/user.controller.js';
 import { sendOTP } from '../controllers/otp.controller.js';
-import compileCode from '../controllers/compile.controller.js';
+import { compileCode, submitCode } from '../controllers/compile.controller.js';
+
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.post('/register', RegisterUser);
 
 
 router.post('/compile', compileCode);
+router.post('/submit', submitCode);
 
 // Debugging logs for route configuration
 // console.log('Routes configured:');
