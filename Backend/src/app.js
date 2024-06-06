@@ -6,6 +6,8 @@ import passport from "passport"
 import { configurePassport } from "./utils/googleLogin.js"
 const app = express()
 
+app.use(cookieParser())
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN
 }))
@@ -23,15 +25,15 @@ app.use(express.urlencoded({
 
 app.use(express.static("public"))
 
-app.use(cookieParser())
 
 
-app.use(cookieSession({ 
-    name: 'google-auth-session', 
-    keys: ['key1', 'key2'] 
-})); 
-app.use(passport.initialize()); 
-app.use(passport.session()); 
+
+// app.use(cookieSession({ 
+//     name: 'google-auth-session', 
+//     keys: ['key1', 'key2'] 
+// })); 
+// app.use(passport.initialize()); 
+// app.use(passport.session()); 
 
 import userRouter from "./routes/user.Routes.js"
 

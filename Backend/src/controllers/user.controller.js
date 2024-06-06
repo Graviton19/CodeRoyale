@@ -3,9 +3,24 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Otp } from "../models/otp.models.js"
-import passport from "passport" 
-import { configurePassport } from "../utils/googleLogin.js" 
-import { Strategy as GoogleStrategy } from "passport-google-oauth2"
+import passport from "passport"
+
+
+const generateAccessAndRefreshTokens = async(userId)=>{
+    try {
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave: false})
+        return {
+            accessToken,
+            refreshToken
+        }
+    } catch (error) {
+        throw new ApiError(500,"Something went wrong while genrating access and refresh tokens")
+    }
+}
 
 const RegisterUser = asyncHandler(async(req,res)=>{
     const {email , username, password , otp} = req.body
@@ -66,12 +81,83 @@ const googleget = (req, res) => {
 
 const googleLoginPage = passport.authenticate('google', { scope: [ 'email', 'profile' ] })
 
+const LoginUser = asyncHandler(async(req,res)=>{
+    const { email,password } = req.body
+    if(!email)
+    {
+        throw new ApiError(400,"Email is required")
+    }
+    if(!password)
+    {
+        throw new ApiError(400,"Password is required")
+    }
+    const user = await User.findOne({email})
 
+    if(!user)
+    {
+        throw new ApiError(404,"User with given email does not exist")
+    }
+    const PasswordCorrect = await user.isPasswordCorrect(password)
+    if(!PasswordCorrect)
+    {
+        throw new ApiError(401,"Invalid Password")
+    }
+    const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user._id)
 
+    const LoggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+    const Options = {
+        httpOnly : true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .cookie("accessToken",accessToken,Options)
+    .cookie("refreshToken",refreshToken,Options)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                user:LoggedInUser, accessToken, refreshToken              
+            },
+            "user logged in successfully"
+        )
+    )
+
+})
+
+const LogoutUser = asyncHandler(async(req,res) => {
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                refreshToken : undefined
+            }
+        },
+        {
+            new: true
+        }
+    )
+    const Options = {
+        httpOnly : true,
+        secure: true
+    }
+
+    res
+    .status(200)
+    .clearCookie("accessToken",Options)
+    .clearCookie("refreshToken",Options)
+    .json(
+        new ApiResponse(200,{},"User Logged Out")
+    )
+})
 
 
 export {
         RegisterUser,
         googleget,
-        googleLoginPage
+        googleLoginPage,
+        LoginUser,
+        LogoutUser
        }

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
 
 const { Schema } = mongoose;
 
@@ -34,11 +35,6 @@ const userSchema = new Schema(
             },
             maxlength: [100, "Email cannot exceed 100 characters"]
         },
-        isVerified: {
-            type: Boolean,
-            default: false
-        },
-        otp: String,
         refreshToken: String
     },
     { timestamps: true }
@@ -64,12 +60,13 @@ userSchema.methods.isPasswordCorrect = async function(password) {
     }
 };
 
+
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id,
             email: this.email,
-            username: this.username,
+            username: this.username
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -77,17 +74,17 @@ userSchema.methods.generateAccessToken = function(){
         }
     )
 }
+
 userSchema.methods.generateRefreshToken = function(){
-    return jwt.sign(
+     return jwt.sign(
         {
-            _id: this._id,
-            
+            _id: this._id
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
-    )
+     )
 }
 
 export const User = mongoose.model("User", userSchema);

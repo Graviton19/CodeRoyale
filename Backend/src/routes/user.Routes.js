@@ -1,27 +1,22 @@
 import { Router } from "express"
-import { RegisterUser, googleget, googleLoginPage } from "../controllers/user.controller.js"
+import { RegisterUser, googleget, googleLoginPage, LoginUser, LogoutUser } from "../controllers/user.controller.js"
 import { sendOTP } from "../controllers/otp.controller.js"
-import { CompileCode } from "../controllers/compile.controller.js"
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
 import { addQuestion } from '../controllers/question.controller.js';
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
-// Middleware to parse JSON bodies
-router.use(express.json());
-
-router.route("/compile").post(CompileCode)
-
-router.route("/google").get(googleget)
-
-router.route("/google/login").get(googleLoginPage)
 // Define routes
-router.post('/sendOTP', sendOTP);
-router.post('/register', RegisterUser);
+router.post("/sendOTP", sendOTP);
+router.post("/register", RegisterUser);
+router.post("/login", LoginUser);
+router.post("/logout", verifyJWT, LogoutUser);
+// router.route("/google").get(googleget);
+// router.route("/google/login").get(googleLoginPage);
 
-router.post('/compile', compileCode);
-router.post('/submit', submitCode);
-
-router.post('/addquestion', addQuestion); // New route for adding questions
+router.post("/compile",verifyJWT, compileCode);
+router.post("/submit",verifyJWT, submitCode);
+router.post("/addquestion",verifyJWT, addQuestion); // New route for adding questions
 
 export default router;
