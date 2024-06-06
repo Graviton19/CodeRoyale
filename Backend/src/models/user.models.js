@@ -21,6 +21,10 @@ const userSchema = new Schema(
             minlength: [6, "Password must be at least 6 characters long"],
             maxlength: [100, "Password cannot exceed 100 characters"]
         },
+        state: { 
+            type: String, 
+            enum: ['idle', 'matching', 'playing'], 
+            default: 'idle' },
         email: {
             type: String,
             required: [true, "Email is required"],
@@ -35,7 +39,8 @@ const userSchema = new Schema(
             },
             maxlength: [100, "Email cannot exceed 100 characters"]
         },
-        refreshToken: String
+        refreshToken: String,
+        play: { type: mongoose.Schema.Types.ObjectId, ref: 'Play' }
     },
     { timestamps: true }
 );

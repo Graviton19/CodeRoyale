@@ -1,5 +1,6 @@
 import { Router } from "express"
 import { RegisterUser, googleget, googleLoginPage, LoginUser, LogoutUser } from "../controllers/user.controller.js"
+import { findMatch } from "../controllers/play.controller.js";
 import { sendOTP } from "../controllers/otp.controller.js"
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
 import { addQuestion } from '../controllers/question.controller.js';
@@ -15,8 +16,15 @@ router.post("/logout", verifyJWT, LogoutUser);
 // router.route("/google").get(googleget);
 // router.route("/google/login").get(googleLoginPage);
 
-router.post("/compile",verifyJWT, compileCode);
-router.post("/submit",verifyJWT, submitCode);
-router.post("/addquestion",verifyJWT, addQuestion); // New route for adding questions
+// router.post("/compile",verifyJWT, compileCode);
+// router.post("/submit",verifyJWT, submitCode);
+// router.post("/addquestion",verifyJWT, addQuestion); // New route for adding questions
+
+router.post("/compile", compileCode);
+router.post("/submit", submitCode);
+router.post("/addquestion",verifyJWT, addQuestion); 
+
+router.post('/find-match', findMatch);
+
 
 export default router;
