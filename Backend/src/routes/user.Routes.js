@@ -5,6 +5,7 @@ import { sendOTP } from "../controllers/otp.controller.js"
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
 import { addQuestion } from '../controllers/question.controller.js';
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { findMatch } from "../controllers/play.controller.js";
 
 const router = Router()
 
@@ -25,7 +26,7 @@ router.post("/compile", compileCode);
 router.post("/submit", submitCode);
 router.post("/addquestion",verifyJWT, addQuestion); 
 
-router.post('/find-match', findMatch);
+router.post('/find-match', verifyJWT, findMatch);
 
 
 export default router;

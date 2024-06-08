@@ -33,6 +33,10 @@ app.use(express.static("public"))
 //     keys: ['key1', 'key2'] 
 // })); 
 // app.use(passport.initialize()); 
+
+
+
+
 // app.use(passport.session()); 
 
 import userRouter from "./routes/user.Routes.js"
