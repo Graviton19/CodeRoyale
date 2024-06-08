@@ -80,6 +80,10 @@ async function submitCode(req, res) {
         play[userField] = { allTestsPassed, testResults };
         await play.save();
 
+        // Set the user's state to idle
+        user.state = 'idle';
+        await user.save();
+
         // Respond with the play session details, including the test results
         res.json({ success: true, play });
     } catch (error) {
