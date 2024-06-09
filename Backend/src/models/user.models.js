@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const { Schema } = mongoose;
 
@@ -23,8 +23,9 @@ const userSchema = new Schema(
         },
         state: { 
             type: String, 
-            enum: ['idle', 'matching', 'playing'], 
-            default: 'idle' },
+            enum: ['idle', 'finding-match', 'pre-match', 'in-match'], 
+            default: 'idle' 
+        },
         email: {
             type: String,
             required: [true, "Email is required"],
@@ -65,7 +66,6 @@ userSchema.methods.isPasswordCorrect = async function(password) {
     }
 };
 
-
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
@@ -93,5 +93,3 @@ userSchema.methods.generateRefreshToken = function(){
 }
 
 export const User = mongoose.model("User", userSchema);
-
-
