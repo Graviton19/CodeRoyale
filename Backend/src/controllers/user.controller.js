@@ -8,21 +8,29 @@ import { Otp } from "../models/otp.models.js"
 import passport from "passport"
 import jwt from "jsonwebtoken"
 
-const generateAccessAndRefreshTokens = async(userId)=>{
+const generateAccessAndRefreshTokens = async(userId) => {
     try {
-        const user = await User.findById(userId)
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
-        user.refreshToken = refreshToken
-        await user.save({validateBeforeSave: false})
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
+
         return {
             accessToken,
             refreshToken
-        }
+        };
     } catch (error) {
-        throw new ApiError(500,"Something went wrong while genrating access and refresh tokens")
+        console.error("Error in generateAccessAndRefreshTokens:", error);
+        throw new ApiError(500, "Something went wrong while generating access and refresh tokens");
     }
-}
+};
+
 
 const RegisterUser = asyncHandler(async(req,res)=>{
     const {email , username, password , otp} = req.body

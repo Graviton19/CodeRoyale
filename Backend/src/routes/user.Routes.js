@@ -5,7 +5,7 @@ import { sendOTP } from "../controllers/otp.controller.js"
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
 import { addQuestion } from '../controllers/question.controller.js';
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { findMatch } from "../controllers/play.controller.js";
+
 
 const router = Router()
 
@@ -23,7 +23,7 @@ router.post("/refresh-token",refershAccessToken);
 // router.post("/addquestion",verifyJWT, addQuestion); // New route for adding questions
 
 router.post("/compile", compileCode);
-router.post("/submit", submitCode);
+router.post("/submit",verifyJWT, submitCode);
 router.post("/addquestion",verifyJWT, addQuestion); 
 
 router.post('/find-match', verifyJWT, findMatch);
