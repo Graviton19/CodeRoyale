@@ -6,7 +6,6 @@ import Play from "../models/play.model.js";
 const findMatch = asyncHandler(async (req, res) => {
     try {
         const { userId } = req.user;
-        // Find another user in the matching state
         const matchUser = await User.findOne({ _id: { $ne: userId }, state: 'matching' });
 
         if (!matchUser) {

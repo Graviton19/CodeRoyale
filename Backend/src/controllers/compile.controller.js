@@ -29,7 +29,7 @@ async function makeCodexRequest(code, language, input) {
     }
 }
 
-// Function to compile and run user code, then compare output with expected results
+
 async function submitCode(req, res) {
     try {
         console.log('Submission request received:', req.body);
@@ -66,7 +66,7 @@ async function submitCode(req, res) {
                 allTestsPassed = false;
             }
 
-            // Add the result of this test case to the testResults array
+            // Add the result of this test case to the test Results array
             testResults.push({
                 input: testCase.input,
                 expectedOutput: testCase.output,
