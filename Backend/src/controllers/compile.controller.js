@@ -48,16 +48,21 @@ async function submitCode(req, res) {
         if (!question) {
             return res.status(404).json({ error: 'Question not found in play session' });
         }
-
+        let PassedCount=0;
         const testResults = [];
         for (const testCase of question.testCases) {
             const result = await makeCodexRequest(code, language, testCase.input);
             const testPassed = result.output.trim() === testCase.output.trim();
+            if(testPassed)
+            {
+                PassedCount = PassedCount + 1;
+            }
             testResults.push({
                 input: testCase.input,
                 expectedOutput: testCase.output,
                 actualOutput: result.output,
-                passed: testPassed
+                passed: testPassed,
+                NoOfTestcasesPassed: PassedCount
             });
         }
 
