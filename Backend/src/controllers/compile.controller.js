@@ -30,7 +30,8 @@ async function makeCodexRequest(code, language, input) {
 
 async function submitCode(req, res) {
     try {
-        const { userId } = req.user;
+        const { _id:userId } = req.user;
+
         const { code, language } = req.body;
 
         const user = await User.findById(userId).populate('play');

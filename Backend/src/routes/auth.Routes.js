@@ -14,4 +14,4 @@ router.get('/google/callback',
 
 router.get('/logout', verifyJWT,LogoutUser);
 
-export default router;
+export default router;  

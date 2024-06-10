@@ -7,11 +7,9 @@ import passport from "passport"
 import jwt from "jsonwebtoken"
 import { request } from "express"
 
-const generateAccessAndRefreshTokens = async(userId,email) => {
+const generateAccessAndRefreshTokens = async(email) => {
     try {
-        const user = await User.findOne({
-            $or: [{userId},{email}]
-        });
+        const user = await User.findOne({email});
         if (!user) {
             throw new ApiError(404, "User not found");
         }
@@ -113,7 +111,7 @@ const LoginUser = asyncHandler(async(req,res)=>{
     {
         throw new ApiError(401,"Invalid Password")
     }
-    const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user._id, null)
+    const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user.email)
 
     const LoggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
