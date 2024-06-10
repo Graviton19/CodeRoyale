@@ -6,6 +6,11 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
     {
+        googleId: { 
+            type: String, 
+            unique: true, 
+            sparse: true 
+        },
         username: {
             type: String,
             required: [true, "Username is required"],
@@ -17,7 +22,7 @@ const userSchema = new Schema(
         },
         password: {
             type: String,
-            required: [true, "Password is required"],
+            required: false,
             minlength: [6, "Password must be at least 6 characters long"],
             maxlength: [100, "Password cannot exceed 100 characters"]
         },
