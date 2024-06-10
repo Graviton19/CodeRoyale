@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import cookieSession from "cookie-session"
+import session from "express-session"
 import passport from "passport"
 import { configurePassport } from "./utils/googleLogin.js"
 const app = express()
@@ -25,7 +25,16 @@ app.use(express.urlencoded({
 
 app.use(express.static("public"))
 
+app.use(session({
+    secret: process.env.SESSION_SECRET, // Use a secure key in production
+    resave: false,
+    saveUninitialized: false
+}));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+configurePassport()
 
 
 // app.use(cookieSession({ 
@@ -42,5 +51,9 @@ app.use(express.static("public"))
 import userRouter from "./routes/user.Routes.js"
 
 app.use("/api/v1/users",userRouter)
+
+import authRouter from "./routes/auth.Routes.js"
+
+app.use('/api/v1/auth', authRouter);
 
 export {app} 

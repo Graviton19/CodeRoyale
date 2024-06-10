@@ -1,16 +1,17 @@
 import { User } from "../models/user.models.js"
-
-
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Otp } from "../models/otp.models.js"
 import passport from "passport"
 import jwt from "jsonwebtoken"
+import { request } from "express"
 
-const generateAccessAndRefreshTokens = async(userId) => {
+const generateAccessAndRefreshTokens = async(userId,email) => {
     try {
-        const user = await User.findById(userId);
+        const user = await User.findOne({
+            $or: [{userId},{email}]
+        });
         if (!user) {
             throw new ApiError(404, "User not found");
         }
@@ -85,11 +86,11 @@ const RegisterUser = asyncHandler(async(req,res)=>{
     )
 })
 
-const googleget = (req, res) => { 
-    res.send("<button><a href='/auth'>Login With Google</a></button>") 
-}; 
+// const googleget = (req, res) => { 
+//     res.send("<button><a href='/auth'>Login With Google</a></button>") 
+// }; 
 
-const googleLoginPage = passport.authenticate('google', { scope: [ 'email', 'profile' ] })
+// const googleLoginPage = passport.authenticate('google', { scope: [ 'email', 'profile' ] })
 
 const LoginUser = asyncHandler(async(req,res)=>{
     const { email,password } = req.body
@@ -112,7 +113,7 @@ const LoginUser = asyncHandler(async(req,res)=>{
     {
         throw new ApiError(401,"Invalid Password")
     }
-    const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user._id)
+    const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user._id, null)
 
     const LoggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -136,6 +137,39 @@ const LoginUser = asyncHandler(async(req,res)=>{
     )
 
 })
+
+const GoogleLogin = async(req,res) => {
+    try {
+        const { email } = req.user
+
+        const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(null,email)
+
+        const LoggedInUser = await User.findOne({email}).select("-password -refreshToken")
+    
+        const Options = {
+            httpOnly : true,
+            secure: true
+        }
+    
+        return res
+        .status(200)
+        .cookie("accessToken",accessToken,Options)
+        .cookie("refreshToken",refreshToken,Options)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    user:LoggedInUser, accessToken, refreshToken              
+                },
+                "user logged in successfully"
+            )
+        )
+    
+    } catch (error) {
+        ApiError(401,"Unauthorized request")
+    }
+}
+
 
 const LogoutUser = asyncHandler(async(req,res) => {
     await User.findByIdAndUpdate(
@@ -211,9 +245,8 @@ const refershAccessToken = asyncHandler(async(req,res) => {
 
 export {
         RegisterUser,
-        googleget,
-        googleLoginPage,
         LoginUser,
         LogoutUser,
-        refershAccessToken
+        refershAccessToken,
+        GoogleLogin
        }

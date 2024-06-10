@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { RegisterUser, googleget, googleLoginPage, LoginUser, LogoutUser, refershAccessToken } from "../controllers/user.controller.js"
+import { RegisterUser, LoginUser, LogoutUser, refershAccessToken } from "../controllers/user.controller.js"
 import { findMatch } from "../controllers/play.controller.js"
 import { sendOTP } from "../controllers/otp.controller.js"
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
