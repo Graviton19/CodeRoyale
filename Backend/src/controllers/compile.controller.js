@@ -55,23 +55,38 @@ async function submitCode(req, res) {
             return res.status(404).json({ error: 'Question not found in play session' });
         }
         console.log('Question found:', question);
-        let PassedCount=0;
+        let PassedCount = 0;
         const testResults = [];
+        const testsNotPassed = [];
         for (const testCase of question.testCases) {
             console.log(`Running test case with input: ${testCase.input}`);
             const result = await makeCodexRequest(code, language, testCase.input);
             const testPassed = result.output.trim() === testCase.output.trim();
+            if(testPassed)
+            {
+                PassedCount = PassedCount + 1;
+            }
+            else
+            {
+                testsNotPassed.push({
+                    input: testCase.input
+                })
+            }
             testResults.push({
                 input: testCase.input,
                 expectedOutput: testCase.output,
                 actualOutput: result.output,
                 passed: testPassed,
-                NoOfTestcasesPassed: PassedCount
             });
         }
 
         const userField = play.user1.toString() === userId ? 'user1Result' : 'user2Result';
-        play[userField] = { allTestsPassed: testResults.every(test => test.passed), testResults };
+        play[userField] = { 
+            allTestsPassed: testResults.every(test => test.passed), 
+            testResults,
+            NoOfTestCasesPassed: PassedCount,
+            testsNotPassed
+        };
         await play.save();
         console.log('Play updated with test results:', play);
 
