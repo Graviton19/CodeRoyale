@@ -79,13 +79,13 @@ async function submitCode(req, res) {
                 passed: testPassed,
             });
         }
-
+        let winner = null;
         const userField = play.user1.toString() === userId ? 'user1Result' : 'user2Result';
         play[userField] = { 
             allTestsPassed: testResults.every(test => test.passed), 
             testResults,
             NoOfTestCasesPassed: PassedCount,
-            testsNotPassed
+            testsNotPassed,
         };
         await play.save();
         console.log('Play updated with test results:', play);
