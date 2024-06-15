@@ -14,7 +14,7 @@ const playSchema = new Schema({
         default: 'pre-match' 
     },
     winner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    createdAt: { type: Date, default: Date.now, expires: 120 }
+    createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 export default mongoose.model('Play', playSchema);

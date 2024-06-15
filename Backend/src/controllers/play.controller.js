@@ -2,6 +2,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.models.js";
 import Question from "../models/question.model.js";
 import Play from "../models/play.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const findMatch = asyncHandler(async (req, res) => {
     try {
@@ -96,4 +98,23 @@ const findMatch = asyncHandler(async (req, res) => {
     }
 });
 
-export { findMatch };
+const abortMatch = asyncHandler(async(req,res)=>{
+    try {
+        const userId = req.user._id
+
+        const deleteAbortedDoc = async() => {
+            try {
+                await Play.deleteOne({userId})
+            } catch (error) {
+                throw new ApiError(500,"Error in deleting the play document")
+            }
+        }
+        // const DeletedDoc = await Play.findOne({userId}).select("-user1Result -user2Result -state -winner -createdAt")
+        setTimeout(deleteAbortedDoc,10000);
+        // new ApiResponse(200, DeletedDoc, "Play Doc would be deleted Successfully")
+    } catch (error) {
+        throw new ApiError(500,"Error in deleting the document")
+    }
+});
+
+export { findMatch, abortMatch };
