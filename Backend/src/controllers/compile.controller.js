@@ -31,7 +31,7 @@ async function makeCodexRequest(code, language, input) {
 async function submitCode(req, res) {
     console.log('submitCode function started');
     try {
-        const { _id:userId } = req.user;
+        const { _id: userId } = req.user;
         const { code, language } = req.body;
         console.log(`User ID: ${userId}, Code: ${code}, Language: ${language}`);
 
@@ -49,12 +49,19 @@ async function submitCode(req, res) {
         }
         console.log('Play found and started:', play);
 
+        // Check if the play session is finished
+        if (play.state === 'finished') {
+            console.log('Play session is finished, cannot submit code');
+            return res.status(400).json({ error: 'Play session is finished, cannot submit code' });
+        }
+
         const question = await Question.findById(play.question);
         if (!question) {
             console.log('Question not found in play session');
             return res.status(404).json({ error: 'Question not found in play session' });
         }
         console.log('Question found:', question);
+
         let PassedCount = 0;
         const testResults = [];
         const testsNotPassed = [];
@@ -62,15 +69,12 @@ async function submitCode(req, res) {
             console.log(`Running test case with input: ${testCase.input}`);
             const result = await makeCodexRequest(code, language, testCase.input);
             const testPassed = result.output.trim() === testCase.output.trim();
-            if(testPassed)
-            {
-                PassedCount = PassedCount + 1;
-            }
-            else
-            {
+            if (testPassed) {
+                PassedCount++;
+            } else {
                 testsNotPassed.push({
                     input: testCase.input
-                })
+                });
             }
             testResults.push({
                 input: testCase.input,
@@ -79,10 +83,11 @@ async function submitCode(req, res) {
                 passed: testPassed,
             });
         }
-        let winner = null;
+
+        // Update play session with test results
         const userField = play.user1.toString() === userId ? 'user1Result' : 'user2Result';
-        play[userField] = { 
-            allTestsPassed: testResults.every(test => test.passed), 
+        play[userField] = {
+            allTestsPassed: testResults.every(test => test.passed),
             testResults,
             NoOfTestCasesPassed: PassedCount,
             testsNotPassed,
