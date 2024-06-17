@@ -1,20 +1,23 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
+import { Link } from 'react-router-dom'; // Import Link for navigation
+import { useAuth } from '../hooks/useAuth';
 
 const Home = () => {
     const { user, logout } = useAuth();
 
+    if (!user) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <div>
-            <h2>Home</h2>
-            {user ? (
-                <div>
-                    <p>Welcome, {user.username}</p>
-                    <button onClick={logout}>Logout</button>
-                </div>
-            ) : (
-                <p>Please login or register.</p>
-            )}
+            <h1>Welcome, {user.email}</h1>
+            <button onClick={logout}>Logout</button>
+            <div>
+                <Link to="/login">Login</Link> {/* Link to Login page */}
+                <span> | </span>
+                <Link to="/register">Register</Link> {/* Link to Register page */}
+            </div>
         </div>
     );
 };

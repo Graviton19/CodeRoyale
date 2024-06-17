@@ -9,8 +9,9 @@ const app = express()
 app.use(cookieParser())
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN
-}))
+    origin: 'http://localhost:3000', // Allow requests from localhost:3000
+    credentials: true // Allow credentials (cookies, authorization headers)
+}));
 
 
 app.use(express.json(
@@ -55,5 +56,8 @@ app.use("/api/v1/users",userRouter)
 import authRouter from "./routes/auth.Routes.js"
 
 app.use('/api/v1/auth', authRouter);
+
+
+
 
 export {app} 

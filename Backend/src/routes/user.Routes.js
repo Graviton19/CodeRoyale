@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { RegisterUser, LoginUser, LogoutUser, refershAccessToken } from "../controllers/user.controller.js"
+import { IsExist,RegisterUser, LoginUser, LogoutUser, refershAccessToken } from "../controllers/user.controller.js"
 import { findMatch,abortMatch } from "../controllers/play.controller.js"
 import { sendOTP } from "../controllers/otp.controller.js"
 import { compileCode, submitCode } from '../controllers/compile.controller.js';
@@ -10,6 +10,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router()
 
 // Define routes
+router.get("/me",verifyJWT, IsExist);
 router.post("/sendOTP", sendOTP);
 router.post("/register", RegisterUser);
 router.post("/login", LoginUser);

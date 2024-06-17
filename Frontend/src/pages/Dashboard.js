@@ -4,15 +4,23 @@ import { useAuth } from '../hooks/useAuth';
 const Dashboard = () => {
     const { user, logout } = useAuth();
 
-    console.log(user)
     if (!user) {
         return <p>Loading...</p>;
     }
 
+    const handleLogout = async () => {
+        try {
+            await logout();
+            // Optionally, redirect to a different page after logout
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
+    };
+
     return (
         <div>
             <h1>Welcome, {user.email}</h1>
-            <button onClick={logout}>Logout</button>
+            <button onClick={handleLogout}>Logout</button>
         </div>
     );
 };

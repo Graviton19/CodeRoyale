@@ -7,6 +7,27 @@ import passport from "passport"
 import jwt from "jsonwebtoken"
 import { request } from "express"
 
+
+const IsExist = asyncHandler( async (req, res) => {
+    try {
+        const { _id: userId } = req.user;
+        // req.user will contain the authenticated user's information set by verifyJWT middleware
+        const user = await User.findById(userId).select('-password'); // Exclude password field
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Return user details in response
+        res.status(200).json({ user });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+
 const generateAccessAndRefreshTokens = async(email) => {
     try {
         const user = await User.findOne({email});
@@ -246,5 +267,6 @@ export {
         LoginUser,
         LogoutUser,
         refershAccessToken,
-        GoogleLogin
+        GoogleLogin,
+        IsExist
        }
