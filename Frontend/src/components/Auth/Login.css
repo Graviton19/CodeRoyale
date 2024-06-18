@@ -1,0 +1,95 @@
+/* Compiler.css */
+
+.compiler-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #282c34; /* Dark background */
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+}
+
+.compiler-header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.compiler-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 80%;
+    max-width: 1200px;
+    height: 80vh;
+    margin-top: 20px;
+}
+
+.editor {
+    background-color: #1e1e1e; /* Dark editor background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    height: 100%;
+    overflow: auto;
+}
+
+.code-input {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #3b4048; /* Input field background */
+    color: #abb2bf; /* Light text color */
+    border: 1px solid #3b4048; /* Input field border */
+    border-radius: 5px;
+    outline: none; /* Remove default focus outline */
+    resize: none; /* Disable textarea resizing */
+}
+
+.compile-btn {
+    background-color: #61afef; /* Button background color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.compile-btn:hover {
+    background-color: #4b8bbe; /* Darker hover color */
+}
+
+.output {
+    background-color: #1e1e1e; /* Dark output background */
+    width: 35%;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.output-header {
+    font-size: 18px;
+    font-weight: bold;
+    color: #61afef; /* Output header color */
+    margin-bottom: 10px;
+}
+
+.output-content {
+    color: #abb2bf; /* Light text color */
+}
+
+.output-message {
+    margin-bottom: 10px;
+    color: #98c379; /* Success message color */
+}
+
+.error-message {
+    margin-bottom: 10px;
+    color: #e06c75; /* Error message color */
+}
