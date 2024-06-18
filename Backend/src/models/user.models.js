@@ -42,7 +42,11 @@ const userSchema = new Schema({
     },
     refreshToken: String,
     play: { type: mongoose.Schema.Types.ObjectId, ref: 'Play' },
-    history: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Play' }] // Array to store play session IDs in history
+    history: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Play' }],
+    rating:{
+        type: Number,
+        default: 1500
+    } // Array to store play session IDs in history
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
