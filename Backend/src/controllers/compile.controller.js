@@ -3,6 +3,8 @@ import qs from 'qs';
 import { User } from '../models/user.models.js';
 import Play from '../models/play.model.js';
 import Question from '../models/question.model.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { EloCalculator } from '../utils/EloRatings.js';
 
 async function makeCodexRequest(code, language, input) {
     const requestData = qs.stringify({
@@ -84,7 +86,13 @@ async function submitCode(req, res) {
             });
         }
 
-        // Update play session with test results
+        const currentTime = new Date();
+        if (play.user1.toString() === userId) {
+            play.user1SubmissionTime = currentTime;
+        } else {
+            play.user2SubmissionTime = currentTime;
+        }
+
         const userField = play.user1.toString() === userId ? 'user1Result' : 'user2Result';
         play[userField] = {
             allTestsPassed: testResults.every(test => test.passed),
@@ -94,6 +102,34 @@ async function submitCode(req, res) {
         };
         await play.save();
         console.log('Play updated with test results:', play);
+        const user1Result = play.user1Result;
+        const user2Result = play.user2Result;
+
+        if (user1Result && user2Result) {
+            if (user1Result.allTestsPassed && user2Result.allTestsPassed) {
+                let winner;
+                if (play.user1SubmissionTime < play.user2SubmissionTime) {
+                    winner = "user1";
+                } else if (play.user1SubmissionTime > play.user2SubmissionTime) {
+                    winner = "user2";
+                } else {
+                    winner = 'draw';
+                }
+
+                play.state = 'finished';
+                play.winner = winner;
+
+                const A = await User.findById(play.user1);
+                const B = await User.findById(play.user2);
+                const { NewRatingA, NewRatingB } = EloCalculator(A.rating, B.rating, winner);
+                A.rating = NewRatingA;
+                B.rating = NewRatingB;
+                await A.save({ validateBeforeSave: false });
+                await B.save({ validateBeforeSave: false });
+                await play.save();
+                console.log('Winner determined and play session finished:', play);
+            }
+        }
 
         res.json({ success: true, play });
     } catch (error) {
