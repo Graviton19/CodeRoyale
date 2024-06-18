@@ -7,13 +7,13 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { login } = useAuth();
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await login({ email, password });
-            navigate('/dashboard'); // Navigate to '/dashboard' on successful login
+            navigate('/'); // Navigate to home page on successful login
         } catch (err) {
             setError('Login failed. Please check your credentials and try again.');
         }
@@ -37,7 +37,7 @@ const Login = () => {
                 <button type="submit">Login</button>
             </form>
             {error && <p>{error}</p>}
-            <button onClick={() => navigate('/register')}>Register</button> {/* Navigate to '/register' route */}
+            <button onClick={() => navigate('/register')}>Register</button>
         </div>
     );
 };

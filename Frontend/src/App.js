@@ -4,7 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
-import Dashboard from './pages/Dashboard';
+import AuthPage from './pages/AuthPage';
 
 const App = () => {
     return (
@@ -12,13 +12,15 @@ const App = () => {
             <AuthProvider>
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/auth" element={<AuthPage />} /> {/* This should render both login and register components */}
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/Dashboard" element={<Dashboard />} />
                 </Routes>
             </AuthProvider>
         </Router>
     );
 };
+
+
 
 export default App;

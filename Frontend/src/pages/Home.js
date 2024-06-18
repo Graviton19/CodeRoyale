@@ -1,23 +1,43 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 
 const Home = () => {
-    const { user, logout } = useAuth();
+    const { user, setUser, logout } = useAuth();
+    const navigate = useNavigate();
 
-    if (!user) {
-        return <p>Loading...</p>;
-    }
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/me`, {
+                    withCredentials: true
+                });
+                setUser(response.data.user);
+            } catch (error) {
+                console.error("Failed to fetch user:", error);
+                navigate('/auth');
+            }
+        };
+
+        if (!user) {
+            checkAuth();
+        }
+    }, [user, setUser, navigate]);
 
     return (
         <div>
-            <h1>Welcome, {user.email}</h1>
-            <button onClick={logout}>Logout</button>
-            <div>
-                <Link to="/login">Login</Link> {/* Link to Login page */}
-                <span> | </span>
-                <Link to="/register">Register</Link> {/* Link to Register page */}
-            </div>
+            {user ? (
+                <div>
+                    <h1>Welcome, {user.email}</h1>
+                    <button onClick={logout}>Logout</button>
+                </div>
+            ) : (
+                <div>
+                    <h1>Welcome to our application</h1>
+                    <Link to="/auth">Login or Register</Link>
+                </div>
+            )}
         </div>
     );
 };

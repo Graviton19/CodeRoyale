@@ -25,7 +25,7 @@ const Register = () => {
         e.preventDefault();
         try {
             await registerUser({ email, username, password, otp }); // Assuming registerUser handles registration with OTP verification
-            navigate('/dashboard'); // Navigate to dashboard on successful registration
+            navigate('/'); // Navigate to dashboard on successful registration
         } catch (err) {
             setError(err.message); // Handle registration error
         }

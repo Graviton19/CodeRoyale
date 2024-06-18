@@ -1,52 +1,68 @@
-import React, { createContext, useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
-import { loginUser, registerUser, logoutUser, refreshToken } from '../api/userService';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [accessToken, setAccessToken] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedAccessToken = localStorage.getItem('accessToken');
-        const storedUser = localStorage.getItem('user');
+        const fetchUser = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/me`, {
+                    withCredentials: true
+                });
+                setUser(response.data.user);
+            } catch (error) {
+                console.error("Failed to fetch user:", error);
+            }
+            setLoading(false);
+        };
 
-        if (storedAccessToken && storedUser) {
-            setAccessToken(storedAccessToken);
-            setUser(JSON.parse(storedUser));
-        }
+        fetchUser();
     }, []);
 
-    const login = async (userData) => {
-        const response = await loginUser(userData);
-        setAccessToken(response.accessToken);
-        setUser(response.user);
-        localStorage.setItem('accessToken', response.accessToken);
-        localStorage.setItem('user', JSON.stringify(response.user));
+    const login = async ({ email, password }) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
+                email,
+                password
+            }, {
+                withCredentials: true
+            });
+            setUser(response.data.user);
+            return response.data;
+        } catch (error) {
+            console.error("Failed to log in:", error);
+            throw error;
+        }
     };
 
-    const register = async (userData) => {
-        await registerUser(userData);
+    const logout = async () => {
+        try {
+            await axios.post(`${process.env.REACT_APP_API_URL}/users/logout`, {}, {
+                withCredentials: true
+            });
+            setUser(null);
+        } catch (error) {
+            console.error("Failed to log out:", error);
+        }
     };
 
-    const logout = () => {
-        logoutUser();
-        setUser(null);
-        setAccessToken(null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-    };
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
-    const value = {
-        user,
-        accessToken,
-        login,
-        register,
-        logout
-    };
-
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ user, setUser, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
-export default AuthContext;
+export const useAuth = () => {
+    return useContext(AuthContext);
+};
+
+export default AuthContext; // Export AuthContext itself
