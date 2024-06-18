@@ -8,6 +8,14 @@ const playSchema = new Schema({
     user2: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     user1Result: { type: Object },
     user2Result: { type: Object },
+    user1SubmissionTime: {
+        type: Date,
+        default: null
+    },
+    user2SubmissionTime: {
+        type: Date,
+        default: null
+    },
     state: {
         type: String,
         enum: ['pre-match', 'started', 'finished', 'aborted'],
