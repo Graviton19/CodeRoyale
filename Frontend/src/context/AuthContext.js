@@ -23,6 +23,10 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, []);
 
+
+    
+
+
     const login = async ({ email, password }) => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
@@ -50,12 +54,35 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+
+    const sendOTP = async (email) => {
+        try {
+            await axios.post(`${process.env.REACT_APP_API_URL}/users/sendOTP`, { email });
+        } catch (error) {
+            throw new Error(error.response.data.message || 'Failed to send OTP');
+        }
+    };
+
+
+    const registerUser = async ({ email, username, password, otp }) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/register`, {
+                email,
+                username,
+                password,
+                otp,
+            });
+            setUser(response.data.user);
+        } catch (error) {
+            throw new Error(error.response.data.message || 'Failed to register');
+        }
+    };
     if (loading) {
         return <p>Loading...</p>;
     }
 
     return (
-        <AuthContext.Provider value={{ user, setUser, login, logout }}>
+        <AuthContext.Provider value={{ user, setUser, login, logout,sendOTP,registerUser }}>
             {children}
         </AuthContext.Provider>
     );

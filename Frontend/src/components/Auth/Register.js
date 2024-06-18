@@ -1,50 +1,55 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth'; // Assuming useAuth handles login and authentication
+import { useAuth } from '../../hooks/useAuth'; // Custom hook for auth operations
 
 const Register = () => {
     const navigate = useNavigate();
-    const { sendOTP, registerUser } = useAuth(); // Custom hook to handle sending OTP and registering user
+    const { sendOTP, registerUser } = useAuth();
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [otp, setOTP] = useState('');
     const [error, setError] = useState('');
+    const [otpSent, setOtpSent] = useState(false);
 
     const handleSendOTP = async (e) => {
         e.preventDefault();
         try {
-            await sendOTP(email); // Assuming sendOTP function sends OTP to the provided email
+            await sendOTP(email);
+            setOtpSent(true);
             setError('');
         } catch (err) {
-            setError(err.message); // Handle error if OTP sending fails
+            setError(err.message);
         }
     };
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await registerUser({ email, username, password, otp }); // Assuming registerUser handles registration with OTP verification
-            navigate('/'); // Navigate to dashboard on successful registration
+            await registerUser({ email, username, password, otp });
+            navigate('/');
         } catch (err) {
-            setError(err.message); // Handle registration error
+            setError(err.message);
+        }
+    };
+
+    const handleSubmit = (e) => {
+        if (otpSent) {
+            handleRegister(e);
+        } else {
+            handleSendOTP(e);
         }
     };
 
     return (
         <div>
-            <form onSubmit={handleSendOTP}>
+            <form onSubmit={handleSubmit}>
                 <input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <button type="submit">Send OTP</button>
-            </form>
-            {error && <p>{error}</p>}
-
-            <form onSubmit={handleRegister}>
                 <input
                     type="text"
                     placeholder="Username"
@@ -57,14 +62,19 @@ const Register = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    value={otp}
-                    onChange={(e) => setOTP(e.target.value)}
-                />
-                <button type="submit">Register</button>
+                {otpSent && (
+                    <input
+                        type="text"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={(e) => setOTP(e.target.value)}
+                    />
+                )}
+                <button type="submit">
+                    {otpSent ? 'Verify and Register' : 'Send OTP'}
+                </button>
             </form>
+            {error && <p>{error}</p>}
         </div>
     );
 };
