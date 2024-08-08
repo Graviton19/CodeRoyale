@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import './Home.css'; // Ensure the path is correct
 
 const Home = () => {
     const { user, logout } = useAuth();
-
-
-
+    console.log("User in Home component:----------------", user); 
     const handleLogout = async () => {
         try {
             await logout();
@@ -16,7 +15,7 @@ const Home = () => {
     };
 
     return (
-        <div>
+        <div className="home-container"> {/* Apply the CSS class */}
             <h1>Welcome to our application</h1>
             
             {user ? (
@@ -26,9 +25,12 @@ const Home = () => {
                 </div>
             ) : (
                 <div>
-                    <Link to="/login"><button>Login</button></Link>
-                        
-                    <Link to="/register"><button>Register</button></Link>
+                    <Link to="/login">
+                        <button>Login</button>
+                    </Link>
+                    <Link to="/register">
+                        <button>Register</button>
+                    </Link>
                 </div>
             )}
         </div>

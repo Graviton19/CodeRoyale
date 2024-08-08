@@ -20,6 +20,7 @@ const Login = () => {
         }
     };
 
+
     return (
         <div className="compiler-container">
             <div className="compiler-header">
@@ -78,26 +79,26 @@ if (validateEmail(email) && validatePassword(password)) {
     setError('Login failed. Please check your credentials.');
 }`}
 
-                    onChange={(e) => {
-                        const newValue = e.target.value;
-                        const lines = newValue.split('\n');
-                        lines.forEach(line => {
-                            if (line.startsWith('const email')) {
-                                const match = line.match(/const email = '([^']*)'/);
-                                if (match) {
-                                    setEmail(match[1]);
+                        onChange={(e) => {
+                            const newValue = e.target.value;
+                            const lines = newValue.split('\n');
+                            lines.forEach(line => {
+                                if (line.startsWith('const email')) {
+                                    const match = line.match(/const email = '([^']*)'/);
+                                    if (match) {
+                                        setEmail(match[1]);
+                                    }
+                                } else if (line.startsWith('const password')) {
+                                    const match = line.match(/const password = '([^']*)'/);
+                                    if (match) {
+                                        setPassword(match[1]);
+                                    }
                                 }
-                            } else if (line.startsWith('const password')) {
-                                const match = line.match(/const password = '([^']*)'/);
-                                if (match) {
-                                    setPassword(match[1]);
-                                }
-                            }
-                        });
-                    }}
-                    placeholder="Enter your email and password here"
-                    rows={20}
-                />
+                            });
+                        }}
+                        placeholder="Enter your email and password here"
+                        rows={20}
+                    />
                 </div>
                 <div className="output">
                     <div className="output-header">Output:</div>

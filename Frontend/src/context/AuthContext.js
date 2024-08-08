@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/me`, {
                     withCredentials: true
                 });
+                console.log("Fetched user:", response.data.user);
                 setUser(response.data.user);
             } catch (error) {
                 console.error("Failed to fetch user:", error);
@@ -23,10 +24,6 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, []);
 
-
-    
-
-
     const login = async ({ email, password }) => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
@@ -35,7 +32,9 @@ export const AuthProvider = ({ children }) => {
             }, {
                 withCredentials: true
             });
-            setUser(response.data.user);
+            console.log("API Response:", response.data);
+            setUser(response.data.data.user); // Ensure the correct path to the user data
+            console.log("User state updated:", response.data.data.user);
             return response.data;
         } catch (error) {
             console.error("Failed to log in:", error);
@@ -54,7 +53,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-
     const sendOTP = async (email) => {
         try {
             await axios.post(`${process.env.REACT_APP_API_URL}/users/sendOTP`, { email });
@@ -62,7 +60,6 @@ export const AuthProvider = ({ children }) => {
             throw new Error(error.response.data.message || 'Failed to send OTP');
         }
     };
-
 
     const registerUser = async ({ email, username, password, otp }) => {
         try {
@@ -77,12 +74,13 @@ export const AuthProvider = ({ children }) => {
             throw new Error(error.response.data.message || 'Failed to register');
         }
     };
+
     if (loading) {
         return <p>Loading...</p>;
     }
 
     return (
-        <AuthContext.Provider value={{ user, setUser, login, logout,sendOTP,registerUser }}>
+        <AuthContext.Provider value={{ user, setUser, login, logout, sendOTP, registerUser }}>
             {children}
         </AuthContext.Provider>
     );
@@ -92,4 +90,4 @@ export const useAuth = () => {
     return useContext(AuthContext);
 };
 
-export default AuthContext; // Export AuthContext itself
+export default AuthContext;
